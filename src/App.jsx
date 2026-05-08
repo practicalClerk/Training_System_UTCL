@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import {
   LayoutDashboard, Calendar, Users, Bell, FileText, Settings, LogOut, Plus, Search,
   Filter, Clock, MapPin, User, Mail, Phone, ChevronRight, X, Check, AlertCircle,
-  Camera, Video, ExternalLink, MessageSquare, BarChart3, ChevronDown, Send,
+  Camera, Video, ExternalLink, MessageSquare, BarChart3, ChevronDown, Send, Menu,
   Building2, GraduationCap, Hammer, Briefcase, ShieldCheck, UserCog
 } from 'lucide-react';
 
@@ -427,7 +427,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
 
               <div>
                 <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Training Mode</label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                   {[
                     { id: 'offline', label: 'Offline', icon: MapPin, desc: 'Physical venue' },
                     { id: 'online', label: 'Online', icon: Video, desc: 'Virtual meeting' },
@@ -448,7 +448,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Date</label>
                   <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
@@ -459,7 +459,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Duration (minutes)</label>
                   <input type="number" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
@@ -487,7 +487,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                 </div>
               )}
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Instructor Name</label>
                   <input type="text" value={form.instructor} onChange={(e) => setForm({ ...form, instructor: e.target.value })} placeholder="Full name" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
@@ -523,7 +523,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                 </div>
               </div>
 
-              <div className="flex gap-2 mb-3">
+              <div className="flex flex-col sm:flex-row gap-2 mb-3">
                 <div className="relative flex-1">
                   <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or employee ID..." className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
@@ -542,8 +542,9 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                 </button>
               </div>
 
-              <div className="border border-slate-200 rounded-lg overflow-hidden">
-                <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 grid grid-cols-12 gap-3 text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
+              <div className="border border-slate-200 rounded-lg overflow-x-auto">
+                <div className="min-w-[700px]">
+                  <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 grid grid-cols-12 gap-3 text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
                   <div className="col-span-1"></div>
                   <div className="col-span-3">Name</div>
                   <div className="col-span-2">Emp ID</div>
@@ -576,6 +577,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                     <div className="py-12 text-center text-sm text-slate-500">No matching workforce records</div>
                   )}
                 </div>
+                </div>
               </div>
             </div>
           )}
@@ -595,7 +597,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="border border-slate-200 rounded-lg p-4">
                   <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-2">Schedule</div>
                   <div className="text-sm text-slate-900 font-medium">{formatDate(form.date)} at {form.time}</div>
@@ -750,7 +752,7 @@ const SessionDetailPanel = ({ session, onClose, role }) => {
             <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-1.5">Aim & Objectives</div>
             <p className="text-sm text-slate-700 leading-relaxed">{session.aim}</p>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="border border-slate-200 rounded-lg p-3.5">
               <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-1"><Calendar className="w-3 h-3" /> Date & Time</div>
               <div className="text-sm font-semibold text-slate-900">{formatDate(session.date)}</div>
@@ -821,6 +823,7 @@ export default function App() {
   const [selectedSession, setSelectedSession] = useState(null);
   const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const user = CURRENT_USERS[currentRole];
   const role = ROLES[Object.keys(ROLES).find(k => ROLES[k].id === currentRole)];
@@ -893,9 +896,14 @@ export default function App() {
   const canSchedule = ['super_admin', 'hr'].includes(currentRole);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif' }}>
+    <div className="min-h-screen bg-slate-50 flex overflow-hidden" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif' }}>
+      {/* Mobile Sidebar Backdrop */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-60 bg-white border-r border-slate-200 flex flex-col">
+      <aside className={`w-64 bg-white border-r border-slate-200 flex flex-col fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-5 border-b border-slate-200">
           <Logo />
         </div>
@@ -922,7 +930,7 @@ export default function App() {
                 const RIcon = r.icon;
                 const active = currentRole === r.id;
                 return (
-                  <button key={r.id} onClick={() => { setCurrentRole(r.id); setActiveView('dashboard'); setRoleSwitcherOpen(false); }}
+                  <button key={r.id} onClick={() => { setCurrentRole(r.id); setActiveView('dashboard'); setRoleSwitcherOpen(false); setIsMobileMenuOpen(false); }}
                     className={`w-full flex items-center gap-2 px-3 py-2 text-left transition ${active ? 'bg-teal-50' : 'hover:bg-slate-50'}`}>
                     <div className={`w-6 h-6 rounded-full bg-${r.color}-100 flex items-center justify-center`}>
                       <RIcon className={`w-3 h-3 text-${r.color}-700`} />
@@ -945,7 +953,7 @@ export default function App() {
             const Icon = item.icon;
             const active = activeView === item.id;
             return (
-              <button key={item.id} onClick={() => setActiveView(item.id)}
+              <button key={item.id} onClick={() => { setActiveView(item.id); setIsMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium mb-0.5 transition ${active ? 'bg-teal-50 text-teal-800' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
                 <Icon className={`w-4 h-4 ${active ? 'text-teal-700' : 'text-slate-500'}`} />
                 {item.label}
@@ -958,17 +966,22 @@ export default function App() {
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
-          <div>
-            <h1 className="text-base font-bold text-slate-900 tracking-tight">
-              {activeView === 'dashboard' && 'Dashboard'}
-              {activeView === 'sessions' && (currentRole === 'employee' || currentRole === 'labour' ? 'My Trainings' : currentRole === 'instructor' ? 'My Sessions' : currentRole === 'hod' ? 'Department Sessions' : 'All Sessions')}
-              {activeView === 'workforce' && 'Workforce Directory'}
-              {activeView === 'notifications' && 'Notifications'}
-              {activeView === 'reports' && 'Reports'}
-              {activeView === 'attendance' && 'Attendance Capture'}
-            </h1>
-            <p className="text-[12px] text-slate-500">UltraTech Cement — Rawan Cement Works</p>
+        <header className="bg-white border-b border-slate-200 px-4 md:px-6 py-3 flex items-center justify-between sticky top-0 z-20">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg md:hidden">
+              <Menu className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-base font-bold text-slate-900 tracking-tight">
+                {activeView === 'dashboard' && 'Dashboard'}
+                {activeView === 'sessions' && (currentRole === 'employee' || currentRole === 'labour' ? 'My Trainings' : currentRole === 'instructor' ? 'My Sessions' : currentRole === 'hod' ? 'Department Sessions' : 'All Sessions')}
+                {activeView === 'workforce' && 'Workforce Directory'}
+                {activeView === 'notifications' && 'Notifications'}
+                {activeView === 'reports' && 'Reports'}
+                {activeView === 'attendance' && 'Attendance Capture'}
+              </h1>
+              <p className="text-[12px] text-slate-500 hidden sm:block">UltraTech Cement — Rawan Cement Works</p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             {canSchedule && (
@@ -989,16 +1002,16 @@ export default function App() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="grid grid-cols-3 gap-4 mb-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <StatCard label="Total Sessions" value={stats.total} sub="Visible to your role" accent />
             <StatCard label="Upcoming" value={stats.upcoming} sub="Scheduled sessions" />
             <StatCard label="Completed" value={stats.completed} sub="Completed sessions" />
           </div>
 
           {activeView === 'dashboard' && (
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2">
                 <div className="bg-white border border-slate-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="text-sm font-semibold text-slate-900">Upcoming Sessions</h2>
