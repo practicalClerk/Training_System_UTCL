@@ -986,8 +986,10 @@ export default function App() {
           <div className="flex items-center gap-3">
             {canSchedule && (
               <button onClick={() => setShowScheduleModal(true)}
-                className="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-lg transition flex items-center gap-1.5 shadow-sm">
-                <Plus className="w-4 h-4" /> Schedule Session
+                className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition flex items-center gap-1 sm:gap-1.5 shadow-sm whitespace-nowrap">
+                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 
+                <span className="hidden sm:inline">Schedule Session</span>
+                <span className="sm:hidden">Schedule</span>
               </button>
             )}
             <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200">
@@ -1020,16 +1022,17 @@ export default function App() {
 
                   <div className="space-y-3">
                     {visibleSessions.map(s => (
-                      <div key={s.id} className="p-3 border border-slate-100 rounded-lg bg-white hover:shadow-sm transition cursor-pointer" onClick={() => setSelectedSession(s)}>
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <div className="text-sm font-semibold text-slate-900">{s.title}</div>
+                      <div key={s.id} className="p-3 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 active:bg-slate-100 transition cursor-pointer" onClick={() => setSelectedSession(s)}>
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="text-sm font-semibold text-slate-900 leading-tight">{s.title}</div>
                             <div className="text-[12px] text-slate-500 mt-1">{formatDate(s.date)} • {s.time} • {getModeLabel(s.mode)}</div>
                           </div>
-                          <div className="text-right">
+                          <div className="text-right hidden sm:block">
                             <div className="text-sm font-semibold text-slate-900">{s.instructor}</div>
                             <div className="text-xs text-slate-500">{s.instructorDesignation}</div>
                           </div>
+                          <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
                         </div>
                       </div>
                     ))}
