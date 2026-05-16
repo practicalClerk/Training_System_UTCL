@@ -4,7 +4,7 @@ import {
   Filter, Clock, MapPin, User, Mail, Phone, ChevronRight, X, Check, AlertCircle,
   Camera, Video, ExternalLink, MessageSquare, BarChart3, ChevronDown, Send, Menu,
   Building2, GraduationCap, Hammer, Briefcase, ShieldCheck, UserCog, ClipboardList,
-  Moon, Sun, Edit, Smartphone
+  Moon, Sun, Edit, Smartphone, Download
 } from 'lucide-react';
 
 
@@ -981,6 +981,52 @@ export default function App() {
                 }).length === 0 && (
                     <div className="p-8 text-center text-sm text-slate-500">No requests found.</div>
                   )}
+              </div>
+            </div>
+          )}
+
+          {activeView === 'reports' && (
+            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-slate-900">Post-Training Reports</h2>
+                <Badge color="green">{completedSessions.length} generated</Badge>
+              </div>
+              <div className="p-4 space-y-4">
+                {completedSessions.map(s => (
+                  <div key={s.id} className="border border-slate-200 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <Badge color="green">Completed</Badge>
+                        <span className="text-[12px] text-slate-500 font-medium">{formatDate(s.date)}</span>
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900">{s.title}</h3>
+                      <div className="text-[13px] text-slate-600 mt-1">Instructor: {s.instructor}</div>
+                      <div className="flex items-center gap-3 mt-3">
+                        <div className="text-[11px] font-medium px-2 py-1 bg-slate-50 border border-slate-200 rounded text-slate-700">
+                          Total Scheduled: {s.participants.length}
+                        </div>
+                        {s.attendance && (
+                          <>
+                            <div className="text-[11px] font-medium px-2 py-1 bg-green-50 border border-green-200 rounded text-green-700">
+                              Present: {s.attendance.present}
+                            </div>
+                            <div className="text-[11px] font-medium px-2 py-1 bg-red-50 border border-red-200 rounded text-red-700">
+                              Absent: {s.attendance.absent}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <button onClick={() => alert(`Downloading Post-Training Report for ${s.title}...`)} className="w-full sm:w-auto px-4 py-2 bg-teal-50 text-teal-700 hover:bg-teal-100 hover:border-teal-300 border border-teal-200 rounded-lg font-semibold text-sm flex items-center justify-center gap-2 transition shadow-sm">
+                        <Download className="w-4 h-4" /> Download Report
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {completedSessions.length === 0 && (
+                  <div className="py-8 text-center text-sm text-slate-500">No completed sessions found for report generation.</div>
+                )}
               </div>
             </div>
           )}

@@ -258,6 +258,14 @@ export const INITIAL_SESSIONS = [
     instructor: 'Self-paced', instructorDept: '-', instructorDesignation: 'External Course',
     aim: 'Self-paced certification course covering PM fundamentals. Completion deadline: May 25, 2026.',
     department: 'Production', participants: [6, 7, 8], status: 'scheduled', attendance: null
+  },
+  {
+    id: 5, title: 'Electrical Safety & LOTO Procedure', mode: 'offline',
+    date: '2026-05-05', time: '11:00', duration: 120,
+    venue: 'Control Room B', meetingLink: '',
+    instructor: 'Rakesh Iyer', instructorDept: 'Electrical Maintenance', instructorDesignation: 'Electrical Engineer',
+    aim: 'Standard Lockout/Tagout procedures for high-voltage panel maintenance.',
+    department: 'Electrical Maintenance', participants: [41, 42, 51, 52, 55], status: 'completed', attendance: { present: 4, absent: 1 }
   }
 ];
 
