@@ -484,11 +484,11 @@ const SessionDetailPanel = ({ session, onClose, role, onRequest }) => {
           </div>
           <div className="flex gap-2">
             {['super_admin', 'hr'].includes(role) && session.status === 'scheduled' && (
-              <button className="text-white/80 hover:text-white p-1.5 rounded hover:bg-white/10 transition flex items-center gap-1 text-sm font-medium">
+              <button className="text-slate-400 hover:text-white p-1.5 rounded hover:bg-slate-700 transition flex items-center gap-1 text-sm font-medium">
                 <Edit className="w-4 h-4" /> <span className="hidden sm:inline">Edit</span>
               </button>
             )}
-            <button onClick={onClose} className="text-white/80 hover:text-white p-1.5 rounded hover:bg-white/10 transition">
+            <button onClick={onClose} className="text-slate-400 hover:text-white p-1.5 rounded hover:bg-slate-700 transition">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -634,13 +634,18 @@ export default function App() {
   const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved !== null ? saved === 'dark' : true;
+  });
 
   React.useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
   }, [isDarkMode]);
 
