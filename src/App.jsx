@@ -40,15 +40,15 @@ const getModeLabel = (mode) => {
 // REUSABLE COMPONENTS
 // ============================================================================
 
-const Logo = ({ small = false }) => (
-  <div className="flex items-center gap-2.5">
-    <div className={`${small ? 'w-8 h-8' : 'w-10 h-10'} rounded-md overflow-hidden bg-white shadow-sm flex-shrink-0`}>
+const Logo = ({ small = false, dark = false }) => (
+  <div className="flex items-center gap-3">
+    <div className={`${small ? 'w-8 h-8' : 'w-10 h-10'} rounded-xl overflow-hidden flex-shrink-0 shadow-md ring-2 ${dark ? 'ring-white/10' : 'ring-slate-200'}`}>
       <img src="/ultratech.jpg" alt="Ultratech Logo" className="w-full h-full object-cover" />
     </div>
     {!small && (
       <div>
-        <div className="text-[15px] font-bold text-slate-900 leading-tight tracking-tight">UltraTech</div>
-        <div className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">Rawan Training</div>
+        <div className={`text-[15px] font-bold leading-tight tracking-tight ${dark ? 'text-white' : 'text-slate-900'}`}>UltraTech</div>
+        <div className={`text-[10px] uppercase tracking-widest font-semibold ${dark ? 'text-slate-400' : 'text-slate-400'}`}>Rawan Training</div>
       </div>
     )}
   </div>
@@ -56,23 +56,79 @@ const Logo = ({ small = false }) => (
 
 const Badge = ({ children, color = 'slate' }) => {
   const colors = {
-    teal: 'bg-teal-50 text-teal-700 border-teal-200',
-    blue: 'bg-blue-50 text-blue-700 border-blue-200',
-    indigo: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    amber: 'bg-amber-50 text-amber-700 border-amber-200',
-    orange: 'bg-orange-50 text-orange-700 border-orange-200',
-    slate: 'bg-slate-100 text-slate-700 border-slate-200',
-    green: 'bg-green-50 text-green-700 border-green-200',
-    red: 'bg-red-50 text-red-700 border-red-200',
+    teal: 'bg-teal-50 text-teal-700 ring-1 ring-teal-200/80',
+    blue: 'bg-blue-50 text-blue-700 ring-1 ring-blue-200/80',
+    indigo: 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200/80',
+    amber: 'bg-amber-50 text-amber-700 ring-1 ring-amber-200/80',
+    orange: 'bg-orange-50 text-orange-700 ring-1 ring-orange-200/80',
+    slate: 'bg-slate-100 text-slate-600 ring-1 ring-slate-200/80',
+    green: 'bg-green-50 text-green-700 ring-1 ring-green-200/80',
+    red: 'bg-red-50 text-red-700 ring-1 ring-red-200/80',
   };
-  return <span className={`inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-medium border rounded ${colors[color]}`}>{children}</span>;
+  return <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-semibold rounded-full ${colors[color]}`}>{children}</span>;
+};
+
+// Predefined role style map to avoid dynamic Tailwind classes (ensures classes are present in source)
+const roleStyles = {
+  teal: {
+    softBg: 'bg-teal-500/20',
+    text: 'text-teal-400',
+    avatarGradient: 'from-teal-500 to-teal-700',
+    avatarGradient2: 'from-teal-400 to-teal-600',
+    ring: 'ring-teal-100'
+  },
+  blue: {
+    softBg: 'bg-blue-500/20',
+    text: 'text-blue-400',
+    avatarGradient: 'from-blue-500 to-blue-700',
+    avatarGradient2: 'from-blue-400 to-blue-600',
+    ring: 'ring-blue-100'
+  },
+  indigo: {
+    softBg: 'bg-indigo-500/20',
+    text: 'text-indigo-400',
+    avatarGradient: 'from-indigo-500 to-indigo-700',
+    avatarGradient2: 'from-indigo-400 to-indigo-600',
+    ring: 'ring-indigo-100'
+  },
+  amber: {
+    softBg: 'bg-amber-500/20',
+    text: 'text-amber-400',
+    avatarGradient: 'from-amber-500 to-amber-700',
+    avatarGradient2: 'from-amber-400 to-amber-600',
+    ring: 'ring-amber-100'
+  },
+  slate: {
+    softBg: 'bg-slate-500/20',
+    text: 'text-slate-400',
+    avatarGradient: 'from-slate-500 to-slate-700',
+    avatarGradient2: 'from-slate-400 to-slate-600',
+    ring: 'ring-slate-100'
+  },
+  orange: {
+    softBg: 'bg-orange-500/20',
+    text: 'text-orange-400',
+    avatarGradient: 'from-orange-500 to-orange-700',
+    avatarGradient2: 'from-orange-400 to-orange-600',
+    ring: 'ring-orange-100'
+  }
 };
 
 const StatCard = ({ label, value, sub, accent = false }) => (
-  <div className={`p-5 rounded-lg border bg-white ${accent ? 'border-teal-500/30' : 'border-slate-200'}`}>
-    <div className="text-[11px] uppercase tracking-wider text-slate-500 font-medium mb-2">{label}</div>
-    <div className={`text-3xl font-bold ${accent ? 'text-teal-600' : 'text-slate-900'} tracking-tight`}>{value}</div>
-    {sub && <div className="text-xs text-slate-500 mt-1">{sub}</div>}
+  <div className={`p-5 rounded-xl border relative overflow-hidden group transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+    accent
+      ? 'bg-gradient-to-br from-teal-600 to-teal-700 border-teal-600 shadow-md shadow-teal-500/20'
+      : 'bg-white border-slate-200 shadow-sm'
+  }`}>
+    <div className={`text-[10px] uppercase tracking-widest font-semibold mb-3 ${accent ? 'text-teal-100' : 'text-slate-400'}`}>{label}</div>
+    <div className={`text-4xl font-extrabold tracking-tight leading-none ${accent ? 'text-white' : 'text-slate-900'}`}>{value}</div>
+    {sub && <div className={`text-xs mt-2.5 font-medium ${accent ? 'text-teal-100/80' : 'text-slate-400'}`}>{sub}</div>}
+    {accent && (
+      <>
+        <div className="absolute -right-5 -bottom-5 w-24 h-24 bg-white/5 rounded-full pointer-events-none" />
+        <div className="absolute -right-2 -top-6 w-16 h-16 bg-white/5 rounded-full pointer-events-none" />
+      </>
+    )}
   </div>
 );
 
@@ -131,12 +187,12 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-teal-600 to-teal-700">
+        <div className="px-6 py-4 border-b border-teal-700/30 flex items-center justify-between bg-gradient-to-r from-slate-900 via-teal-900 to-teal-800">
           <div>
             <h2 className="text-lg font-bold text-white tracking-tight">Schedule New Training Session</h2>
-            <p className="text-[12px] text-teal-100 mt-0.5">Step {step} of 3 — {step === 1 ? 'Session Details' : step === 2 ? 'Select Participants' : 'Review & Confirm'}</p>
+            <p className="text-[12px] text-teal-300/80 mt-0.5 font-medium">Step {step} of 3 — {step === 1 ? 'Session Details' : step === 2 ? 'Select Participants' : 'Review & Confirm'}</p>
           </div>
-          <button onClick={onClose} className="text-white/80 hover:text-white p-1.5 rounded hover:bg-white/10 transition">
+          <button onClick={onClose} className="text-white/60 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -160,7 +216,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                   type="text" value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="e.g., Fire Safety Refresher Training"
-                  className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
+                  className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
                 />
               </div>
 
@@ -176,11 +232,11 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                     return (
                       <button
                         key={m.id} onClick={() => setForm({ ...form, mode: m.id })}
-                        className={`p-3 rounded-lg border-2 text-left transition ${form.mode === m.id ? 'border-teal-600 bg-teal-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
+                        className={`p-3 rounded-lg border-2 text-left transition ${form.mode === m.id ? 'border-teal-600 bg-teal-50 dark:bg-slate-800/60' : 'border-slate-200 hover:border-slate-300 bg-white dark:bg-slate-800'}`}
                       >
-                        <Icon className={`w-4 h-4 mb-1.5 ${form.mode === m.id ? 'text-teal-700' : 'text-slate-600'}`} />
-                        <div className={`text-sm font-semibold ${form.mode === m.id ? 'text-teal-900' : 'text-slate-900'}`}>{m.label}</div>
-                        <div className="text-[11px] text-slate-500 mt-0.5">{m.desc}</div>
+                        <Icon className={`w-4 h-4 mb-1.5 ${form.mode === m.id ? 'text-teal-700' : 'text-slate-600 dark:text-slate-300'}`} />
+                        <div className={`text-sm font-semibold ${form.mode === m.id ? 'text-teal-900 dark:text-teal-100' : 'text-slate-900 dark:text-slate-100'}`}>{m.label}</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{m.desc}</div>
                       </button>
                     );
                   })}
@@ -190,22 +246,22 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Date</label>
-                  <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Time</label>
-                  <input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Duration (minutes)</label>
-                  <input type="number" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="number" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Target Department</label>
-                  <select value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none bg-white">
+                  <select value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none">
                     <option value="">Select department</option>
                     {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
@@ -215,35 +271,35 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
               {(form.mode === 'offline') && (
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Venue</label>
-                  <input type="text" value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })} placeholder="e.g., Training Hall A, Admin Block" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="text" value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })} placeholder="e.g., Training Hall A, Admin Block" className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
               )}
 
               {(form.mode === 'online' || form.mode === 'third_party') && (
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">{form.mode === 'online' ? 'Meeting Link' : 'Course URL'}</label>
-                  <input type="url" value={form.meetingLink} onChange={(e) => setForm({ ...form, meetingLink: e.target.value })} placeholder="https://..." className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="url" value={form.meetingLink} onChange={(e) => setForm({ ...form, meetingLink: e.target.value })} placeholder="https://..." className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Instructor Name</label>
-                  <input type="text" value={form.instructor} onChange={(e) => setForm({ ...form, instructor: e.target.value })} placeholder="Full name" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="text" value={form.instructor} onChange={(e) => setForm({ ...form, instructor: e.target.value })} placeholder="Full name" className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Department</label>
-                  <input type="text" value={form.instructorDept} onChange={(e) => setForm({ ...form, instructorDept: e.target.value })} placeholder="e.g., Safety & Training" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="text" value={form.instructorDept} onChange={(e) => setForm({ ...form, instructorDept: e.target.value })} placeholder="e.g., Safety & Training" className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
                 <div>
                   <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Designation</label>
-                  <input type="text" value={form.instructorDesignation} onChange={(e) => setForm({ ...form, instructorDesignation: e.target.value })} placeholder="e.g., Senior Trainer" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="text" value={form.instructorDesignation} onChange={(e) => setForm({ ...form, instructorDesignation: e.target.value })} placeholder="e.g., Senior Trainer" className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
               </div>
 
               <div>
                 <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Aim & Objectives</label>
-                <textarea value={form.aim} onChange={(e) => setForm({ ...form, aim: e.target.value })} rows={3} placeholder="What will participants learn? What is the goal of this session?" className="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none resize-none" />
+                <textarea value={form.aim} onChange={(e) => setForm({ ...form, aim: e.target.value })} rows={3} placeholder="What will participants learn? What is the goal of this session?" className="w-full px-3.5 py-2.5 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none resize-none" />
               </div>
             </div>
           )}
@@ -265,13 +321,13 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
               <div className="flex flex-col sm:flex-row gap-2 mb-3">
                 <div className="relative flex-1">
                   <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or employee ID..." className="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none" />
+                  <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or employee ID..." className="w-full pl-9 pr-3 py-2 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-teal-500 outline-none" />
                 </div>
-                <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)} className="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-teal-500 outline-none">
+                <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)} className="px-3 py-2 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none">
                   <option value="all">All Departments</option>
                   {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
-                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-teal-500 outline-none">
+                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="px-3 py-2 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-teal-500 outline-none">
                   <option value="all">All Types</option>
                   <option value="employee">Employees</option>
                   <option value="labour">Labours</option>
@@ -696,7 +752,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
-    return saved !== null ? saved === 'dark' : true;
+    return saved !== null ? saved === 'dark' : false;
   });
 
   React.useEffect(() => {
@@ -784,50 +840,64 @@ export default function App() {
   const canSchedule = ['super_admin', 'hr'].includes(currentRole);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex overflow-hidden" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif' }}>
+    <div className="min-h-screen bg-slate-100/60 flex overflow-hidden" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" }}>
       {/* Mobile Sidebar Backdrop */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
       )}
 
-      {/* Sidebar */}
-      <aside className={`w-64 bg-white border-r border-slate-200 flex flex-col fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-5 border-b border-slate-200">
-          <Logo />
+      {/* Sidebar — hardcoded dark colors so they stay dark in both light & dark theme */}
+      <aside
+        className={`w-64 flex flex-col fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ backgroundColor: '#0f172a', borderRight: '1px solid #1e293b' }}
+      >
+        {/* Logo area with orange→teal accent strip */}
+        <div className="px-5 py-5 relative" style={{ borderBottom: '1px solid #1e293b' }}>
+          <div className="absolute top-0 left-0 w-1 h-full" style={{ background: 'linear-gradient(to bottom, #f97316, #0d9488)' }} />
+          <Logo dark />
         </div>
 
-        <div className="p-3 border-b border-slate-200">
-          <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold px-3 mb-2">Demo Mode</div>
+        {/* Role switcher */}
+        <div className="p-3" style={{ borderBottom: '1px solid #1e293b' }}>
+          <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2" style={{ color: '#475569' }}>Demo Mode</div>
           <button onClick={() => setRoleSwitcherOpen(!roleSwitcherOpen)}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition">
-            <div className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-full bg-${role.color}-100 flex items-center justify-center`}>
-                <role.icon className={`w-3.5 h-3.5 text-${role.color}-700`} />
+            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg transition-all"
+            style={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
+            onMouseEnter={e => e.currentTarget.style.backgroundColor = '#334155'}
+            onMouseLeave={e => e.currentTarget.style.backgroundColor = '#1e293b'}
+          >
+            <div className="flex items-center gap-2.5">
+              <div className={`w-7 h-7 rounded-lg ${roleStyles[role.color]?.softBg || 'bg-slate-500/20'} flex items-center justify-center`}>
+                <role.icon className={`w-3.5 h-3.5 ${roleStyles[role.color]?.text || 'text-slate-400'}`} />
               </div>
               <div className="text-left">
-                <div className="text-[12px] font-semibold text-slate-900 leading-tight">{role.name}</div>
-                <div className="text-[10px] text-slate-500">Switch role</div>
+                <div className="text-[12px] font-semibold leading-tight" style={{ color: '#f1f5f9' }}>{role.name}</div>
+                <div className="text-[10px]" style={{ color: '#64748b' }}>Switch role</div>
               </div>
             </div>
-            <ChevronDown className={`w-4 h-4 text-slate-400 transition ${roleSwitcherOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${roleSwitcherOpen ? 'rotate-180' : ''}`} style={{ color: '#64748b' }} />
           </button>
 
           {roleSwitcherOpen && (
-            <div className="mt-2 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden">
+            <div className="mt-2 rounded-lg shadow-2xl overflow-hidden" style={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}>
               {Object.values(ROLES).map(r => {
                 const RIcon = r.icon;
                 const active = currentRole === r.id;
                 return (
                   <button key={r.id} onClick={() => { setCurrentRole(r.id); setActiveView('dashboard'); setRoleSwitcherOpen(false); setIsMobileMenuOpen(false); }}
-                    className={`w-full flex items-center gap-2 px-3 py-2 text-left transition ${active ? 'bg-teal-50' : 'hover:bg-slate-50'}`}>
-                    <div className={`w-6 h-6 rounded-full bg-${r.color}-100 flex items-center justify-center`}>
-                      <RIcon className={`w-3 h-3 text-${r.color}-700`} />
+                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-left transition-all`}
+                    style={{ backgroundColor: active ? 'rgba(13,148,136,0.15)' : 'transparent' }}
+                    onMouseEnter={e => { if (!active) e.currentTarget.style.backgroundColor = '#334155'; }}
+                    onMouseLeave={e => { if (!active) e.currentTarget.style.backgroundColor = 'transparent'; }}
+                  >
+                    <div className={`w-6 h-6 rounded-md ${roleStyles[r.color]?.softBg || 'bg-slate-500/20'} flex items-center justify-center`}>
+                      <RIcon className={`w-3 h-3 ${roleStyles[r.color]?.text || 'text-slate-400'}`} />
                     </div>
                     <div className="flex-1">
-                      <div className={`text-[12px] font-medium ${active ? 'text-teal-900' : 'text-slate-900'}`}>{r.name}</div>
-                      <div className={`text-[10px] ${active ? 'text-teal-700' : 'text-slate-500'}`}>{r.label}</div>
+                      <div className="text-[12px] font-semibold" style={{ color: active ? '#5eead4' : '#e2e8f0' }}>{r.name}</div>
+                      <div className="text-[10px]" style={{ color: active ? '#2dd4bf' : '#64748b' }}>{r.label}</div>
                     </div>
-                    {active && <Check className="w-3.5 h-3.5 text-teal-600" />}
+                    {active && <Check className="w-3.5 h-3.5" style={{ color: '#2dd4bf' }} />}
                   </button>
                 );
               })}
@@ -835,32 +905,54 @@ export default function App() {
           )}
         </div>
 
-        <nav className="flex-1 p-3">
-          <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold px-3 mb-2 mt-1">Menu</div>
+        {/* Navigation */}
+        <nav className="flex-1 p-3 overflow-y-auto">
+          <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2 mt-1" style={{ color: '#475569' }}>Menu</div>
           {menuItems.map(item => {
             const Icon = item.icon;
             const active = activeView === item.id;
             return (
               <button key={item.id} onClick={() => { setActiveView(item.id); setIsMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium mb-0.5 transition ${active ? 'bg-teal-50 text-teal-800' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}>
-                <Icon className={`w-4 h-4 ${active ? 'text-teal-700' : 'text-slate-500'}`} />
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium mb-0.5 transition-all"
+                style={{
+                  backgroundColor: active ? '#0d9488' : 'transparent',
+                  color: active ? '#ffffff' : '#94a3b8',
+                  boxShadow: active ? '0 2px 8px rgba(13,148,136,0.3)' : 'none',
+                }}
+                onMouseEnter={e => { if (!active) { e.currentTarget.style.backgroundColor = '#1e293b'; e.currentTarget.style.color = '#f1f5f9'; } }}
+                onMouseLeave={e => { if (!active) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#94a3b8'; } }}
+              >
+                <Icon className="w-4 h-4 flex-shrink-0" style={{ color: active ? '#ffffff' : '#64748b' }} />
                 {item.label}
               </button>
             );
           })}
         </nav>
+
+        {/* Bottom user card */}
+        <div className="p-3" style={{ borderTop: '1px solid #1e293b' }}>
+          <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg" style={{ backgroundColor: '#1e293b' }}>
+            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${roleStyles[role.color]?.avatarGradient || 'from-slate-500 to-slate-700'} flex items-center justify-center text-white font-bold text-xs shadow-sm`}>
+              {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[12px] font-semibold truncate" style={{ color: '#f1f5f9' }}>{user.name}</div>
+              <div className="text-[10px] truncate" style={{ color: '#64748b' }}>{user.designation}</div>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="bg-white border-b border-slate-200 px-4 md:px-6 py-3 flex items-center justify-between sticky top-0 z-20">
+        <header className="bg-white border-b border-slate-200 shadow-sm px-4 md:px-6 py-3.5 flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-3">
-            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg md:hidden">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -ml-2 text-slate-400 hover:bg-slate-100 rounded-lg md:hidden">
               <Menu className="w-5 h-5" />
             </button>
             <div>
-              <h1 className="text-base font-bold text-slate-900 tracking-tight">
+              <h1 className="text-[15px] font-bold text-slate-900 tracking-tight">
                 {activeView === 'dashboard' && 'Dashboard'}
                 {activeView === 'sessions' && (currentRole === 'employee' || currentRole === 'labour' ? 'My Trainings' : currentRole === 'instructor' ? 'My Sessions' : currentRole === 'hod' ? 'Department Sessions' : 'All Sessions')}
                 {activeView === 'workforce' && 'Workforce Directory'}
@@ -869,34 +961,34 @@ export default function App() {
                 {activeView === 'attendance' && 'Attendance Capture'}
                 {activeView === 'requests' && (['employee', 'labour'].includes(currentRole) ? 'My Requests' : 'Pending Approvals')}
               </h1>
-              <p className="text-[12px] text-slate-500 hidden sm:block">UltraTech Cement — Rawan Cement Works</p>
+              <p className="text-[11px] text-slate-400 font-medium hidden sm:block tracking-wide">UltraTech Cement — Rawan Cement Works</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition">
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          <div className="flex items-center gap-2.5">
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 rounded-lg transition">
+              {isDarkMode ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
             </button>
             {canSchedule && (
               <button onClick={() => setShowScheduleModal(true)}
-                className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition flex items-center gap-1 sm:gap-1.5 shadow-sm whitespace-nowrap">
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white text-xs sm:text-sm font-semibold rounded-lg transition-all shadow-md shadow-teal-500/25 flex items-center gap-1.5 whitespace-nowrap">
                 <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Schedule Session</span>
                 <span className="sm:hidden">Schedule</span>
               </button>
             )}
-            <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200">
-              <div className={`w-9 h-9 rounded-full bg-${role.color}-100 flex items-center justify-center text-${role.color}-700 font-bold text-sm`}>
+            <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200 ml-1">
+              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${roleStyles[role.color]?.avatarGradient2 || 'from-slate-400 to-slate-600'} flex items-center justify-center text-white font-bold text-sm shadow-sm ring-2 ${roleStyles[role.color]?.ring || 'ring-slate-100'}`}>
                 {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
               </div>
-              <div>
-                <div className="text-sm font-semibold text-slate-900 leading-tight">{user.name}</div>
-                <div className="text-[11px] text-slate-500">{user.designation}</div>
+              <div className="hidden sm:block">
+                <div className="text-[13px] font-semibold text-slate-900 leading-tight">{user.name}</div>
+                <div className="text-[11px] text-slate-400 font-medium">{user.designation}</div>
               </div>
             </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-50">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <StatCard label="Total Sessions" value={stats.total} sub="Visible to your role" accent />
             <StatCard label="Upcoming" value={stats.upcoming} sub="Scheduled sessions" />
@@ -904,43 +996,44 @@ export default function App() {
           </div>
 
           {activeView === 'dashboard' && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               <div className="lg:col-span-2">
-                <div className="bg-white border border-slate-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-sm font-semibold text-slate-900">Upcoming Sessions</h2>
-                    <div className="text-xs text-slate-500">{upcomingSessions.length} scheduled</div>
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider">Upcoming Sessions</h2>
+                    <span className="text-[11px] font-semibold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">{upcomingSessions.length} scheduled</span>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                     {visibleSessions.map(s => (
-                      <div key={s.id} className="p-3 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 active:bg-slate-100 transition cursor-pointer" onClick={() => setSelectedSession(s)}>
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex-1">
-                            <div className="text-sm font-semibold text-slate-900 leading-tight">{s.title}</div>
-                            <div className="text-[12px] text-slate-500 mt-1">{formatDate(s.date)} • {s.time} • {getModeLabel(s.mode)}</div>
-                          </div>
-                          <div className="text-right hidden sm:block">
-                            <div className="text-sm font-semibold text-slate-900">{s.instructor}</div>
-                            <div className="text-xs text-slate-500">{s.instructorDesignation}</div>
-                          </div>
-                          <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                      <div key={s.id}
+                        className="flex items-center gap-3 p-3.5 border border-slate-100 rounded-xl bg-white hover:border-teal-200 hover:shadow-md hover:-translate-y-px active:translate-y-0 transition-all cursor-pointer group"
+                        onClick={() => setSelectedSession(s)}>
+                        <div className="w-1 h-10 rounded-full bg-gradient-to-b from-teal-500 to-teal-700 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[13px] font-semibold text-slate-900 leading-tight truncate">{s.title}</div>
+                          <div className="text-[11px] text-slate-400 mt-0.5 font-medium">{formatDate(s.date)} · {s.time} · {getModeLabel(s.mode)}</div>
                         </div>
+                        <div className="text-right hidden sm:block flex-shrink-0">
+                          <div className="text-[12px] font-semibold text-slate-700">{s.instructor}</div>
+                          <div className="text-[11px] text-slate-400">{s.instructorDesignation}</div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-teal-500 flex-shrink-0 transition-colors" />
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div>
-                <div className="bg-white border border-slate-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-3">Workforce</h3>
-                  <div className="space-y-2">
+              <div className="space-y-4">
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+                  <h3 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-4">Workforce</h3>
+                  <div className="space-y-3">
                     {WORKFORCE.slice(0, 6).map(w => (
-                      <div key={w.id} className="flex items-center justify-between">
-                        <div>
-                          <div className="text-sm font-medium text-slate-900">{w.name}</div>
-                          <div className="text-xs text-slate-500">{w.designation} • {w.dept}</div>
+                      <div key={w.id} className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="text-[13px] font-semibold text-slate-900 truncate">{w.name}</div>
+                          <div className="text-[11px] text-slate-400 truncate">{w.designation} · {w.dept}</div>
                         </div>
                         <Badge color={w.type === 'labour' ? 'orange' : 'slate'}>{w.type === 'labour' ? 'Labour' : 'Emp'}</Badge>
                       </div>
@@ -948,9 +1041,9 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="mt-4 bg-white border border-slate-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-3">Notifications</h3>
-                  <p className="text-xs text-slate-500">{notifLog ? `${notifLog.length} messages sent` : 'No notifications sent yet'}</p>
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+                  <h3 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-3">Notifications</h3>
+                  <p className="text-[12px] text-slate-400 font-medium">{notifLog ? `${notifLog.length} messages sent` : 'No notifications sent yet'}</p>
                 </div>
               </div>
             </div>
@@ -958,18 +1051,20 @@ export default function App() {
 
           {activeView === 'sessions' && (
             <div>
-              <div className="bg-white border border-slate-200 rounded-lg p-4">
-                <h2 className="text-sm font-semibold text-slate-900 mb-3">All Sessions</h2>
-                <div className="space-y-2">
+              <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+                <h2 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-4">All Sessions</h2>
+                <div className="space-y-2.5">
                   {visibleSessions.map(s => (
-                    <div key={s.id} className="p-3 border border-slate-100 rounded-lg bg-white hover:shadow-sm transition cursor-pointer" onClick={() => setSelectedSession(s)}>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="text-sm font-semibold text-slate-900">{s.title}</div>
-                          <div className="text-[12px] text-slate-500 mt-1">{formatDate(s.date)} • {s.time}</div>
-                        </div>
-                        <div className="text-sm text-slate-500">{getModeLabel(s.mode)}</div>
+                    <div key={s.id}
+                      className="flex items-center gap-3 p-3.5 border border-slate-100 rounded-xl bg-white hover:border-teal-200 hover:shadow-md hover:-translate-y-px active:translate-y-0 transition-all cursor-pointer group"
+                      onClick={() => setSelectedSession(s)}>
+                      <div className={`w-1 h-10 rounded-full flex-shrink-0 ${s.status === 'completed' ? 'bg-gradient-to-b from-slate-400 to-slate-500' : 'bg-gradient-to-b from-orange-500 to-orange-700'}`} />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[13px] font-semibold text-slate-900 truncate">{s.title}</div>
+                        <div className="text-[11px] text-slate-400 mt-0.5 font-medium">{formatDate(s.date)} · {s.time}</div>
                       </div>
+                      <Badge color={s.status === 'completed' ? 'slate' : 'teal'}>{getModeLabel(s.mode)}</Badge>
+                      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-teal-500 flex-shrink-0 transition-colors" />
                     </div>
                   ))}
                 </div>
@@ -978,9 +1073,9 @@ export default function App() {
           )}
 
           {activeView === 'requests' && (
-            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-slate-900">Request Tracker</h2>
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h2 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider">Request Tracker</h2>
                 <Badge color="blue">{requests.length} total</Badge>
               </div>
               <div className="divide-y divide-slate-100">
