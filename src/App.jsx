@@ -4,7 +4,7 @@ import {
   Filter, Clock, MapPin, User, Mail, Phone, ChevronRight, X, Check, AlertCircle,
   Camera, Video, ExternalLink, MessageSquare, BarChart3, ChevronDown, Send, Menu,
   Building2, GraduationCap, Hammer, Briefcase, ShieldCheck, UserCog, ClipboardList,
-  Moon, Sun, Edit, Smartphone, Download
+  Moon, Sun, Edit, Smartphone, Download, Pin, PinOff
 } from 'lucide-react';
 
 
@@ -190,10 +190,7 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
         <div className="px-6 py-4 border-b border-teal-700/30 flex items-center justify-between bg-gradient-to-r from-slate-900 via-teal-900 to-teal-800">
           <div>
             <h2 className="text-lg font-bold text-white tracking-tight">Schedule New Training Session</h2>
-            <p
-              className="text-[12px] text-slate-900 dark:text-white mt-0.5 font-medium"
-              style={{ textShadow: '0 0 1px #000' }}
-            >
+            <p className="text-[12px] text-white mt-0.5 font-medium selection:text-white selection:bg-black/40" style={{ textShadow: '0 1px 1px rgba(0,0,0,0.7)' }}>
               Step {step} of 3 — {step === 1 ? 'Session Details' : step === 2 ? 'Select Participants' : 'Review & Confirm'}
             </p>
           </div>
@@ -756,6 +753,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [isSidebarPinned, setIsSidebarPinned] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
     return saved !== null ? saved === 'dark' : false;
@@ -844,6 +842,7 @@ export default function App() {
   }, [currentRole]);
 
   const canSchedule = ['super_admin', 'hr'].includes(currentRole);
+  const isSidebarOpen = isSidebarPinned || isSidebarExpanded;
 
   return (
     <div className="min-h-screen bg-slate-100/60 flex overflow-hidden" style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" }}>
@@ -854,22 +853,33 @@ export default function App() {
 
       {/* Sidebar — hardcoded dark colors so they stay dark in both light & dark theme */}
       <aside
-        className={`w-64 flex flex-col fixed inset-y-0 left-0 z-40 transform transition-all duration-300 md:relative md:translate-x-0 ${isSidebarExpanded ? 'md:w-64' : 'md:w-20'} ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`w-64 flex flex-col fixed inset-y-0 left-0 z-40 transform transition-all duration-300 md:relative md:translate-x-0 ${isSidebarOpen ? 'md:w-64' : 'md:w-20'} ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ backgroundColor: '#0f172a', borderRight: '1px solid #1e293b' }}
-        onMouseEnter={() => setIsSidebarExpanded(true)}
-        onMouseLeave={() => setIsSidebarExpanded(false)}
+        onMouseEnter={() => { if (!isSidebarPinned) setIsSidebarExpanded(true); }}
+        onMouseLeave={() => { if (!isSidebarPinned) setIsSidebarExpanded(false); }}
       >
         {/* Logo area with orange→teal accent strip */}
         <div className="px-5 py-5 relative" style={{ borderBottom: '1px solid #1e293b' }}>
           <div className="absolute top-0 left-0 w-1 h-full" style={{ background: 'linear-gradient(to bottom, #f97316, #0d9488)' }} />
-          <Logo dark small={!isSidebarExpanded} />
+          <Logo dark small={!isSidebarOpen} />
+          <button
+            onClick={() => {
+              setIsSidebarPinned(prev => !prev);
+              setIsSidebarExpanded(prev => (isSidebarPinned ? false : true));
+            }}
+            className="hidden md:flex absolute top-3 right-3 w-7 h-7 items-center justify-center rounded-md text-slate-300 hover:text-white hover:bg-slate-700/80 transition"
+            title={isSidebarPinned ? 'Unpin sidebar' : 'Pin sidebar'}
+            aria-label={isSidebarPinned ? 'Unpin sidebar' : 'Pin sidebar'}
+          >
+            {isSidebarPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
+          </button>
         </div>
 
         {/* Role switcher */}
         <div className="p-3" style={{ borderBottom: '1px solid #1e293b' }}>
-          {isSidebarExpanded && <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2" style={{ color: '#475569' }}>Demo Mode</div>}
+          {isSidebarOpen && <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2" style={{ color: '#475569' }}>Demo Mode</div>}
           <button onClick={() => setRoleSwitcherOpen(!roleSwitcherOpen)}
-            className={`w-full flex items-center ${isSidebarExpanded ? 'justify-between' : 'justify-center'} gap-2 px-3 py-2.5 rounded-lg transition-all`}
+            className={`w-full flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} gap-2 px-3 py-2.5 rounded-lg transition-all`}
             style={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
             onMouseEnter={e => e.currentTarget.style.backgroundColor = '#334155'}
             onMouseLeave={e => e.currentTarget.style.backgroundColor = '#1e293b'}
@@ -878,14 +888,14 @@ export default function App() {
               <div className={`w-7 h-7 rounded-lg ${roleStyles[role.color]?.softBg || 'bg-slate-500/20'} flex items-center justify-center`}>
                 <role.icon className={`w-3.5 h-3.5 ${roleStyles[role.color]?.text || 'text-slate-400'}`} />
               </div>
-              {isSidebarExpanded && (
+              {isSidebarOpen && (
                 <div className="text-left">
                   <div className="text-[12px] font-semibold leading-tight" style={{ color: '#f1f5f9' }}>{role.name}</div>
                   <div className="text-[10px]" style={{ color: '#64748b' }}>Switch role</div>
                 </div>
               )}
             </div>
-            {isSidebarExpanded && <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${roleSwitcherOpen ? 'rotate-180' : ''}`} style={{ color: '#64748b' }} />}
+            {isSidebarOpen && <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${roleSwitcherOpen ? 'rotate-180' : ''}`} style={{ color: '#64748b' }} />}
           </button>
 
           {roleSwitcherOpen && (
@@ -917,13 +927,13 @@ export default function App() {
 
         {/* Navigation */}
         <nav className="flex-1 p-3 overflow-y-auto">
-          {isSidebarExpanded && <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2 mt-1" style={{ color: '#475569' }}>Menu</div>}
+          {isSidebarOpen && <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2 mt-1" style={{ color: '#475569' }}>Menu</div>}
           {menuItems.map(item => {
             const Icon = item.icon;
             const active = activeView === item.id;
             return (
               <button key={item.id} onClick={() => { setActiveView(item.id); setIsMobileMenuOpen(false); }}
-                className={`w-full flex items-center ${isSidebarExpanded ? 'justify-start gap-3' : 'justify-center'} px-3 py-2.5 rounded-lg text-sm font-medium mb-0.5 transition-all`}
+                className={`w-full flex items-center ${isSidebarOpen ? 'justify-start gap-3' : 'justify-center'} px-3 py-2.5 rounded-lg text-sm font-medium mb-0.5 transition-all`}
                 style={{
                   backgroundColor: active ? '#0d9488' : 'transparent',
                   color: active ? '#ffffff' : '#94a3b8',
@@ -933,7 +943,7 @@ export default function App() {
                 onMouseLeave={e => { if (!active) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#94a3b8'; } }}
               >
                 <Icon className="w-4 h-4 flex-shrink-0" style={{ color: active ? '#ffffff' : '#64748b' }} />
-                {isSidebarExpanded && item.label}
+                {isSidebarOpen && item.label}
               </button>
             );
           })}
@@ -941,11 +951,11 @@ export default function App() {
 
         {/* Bottom user card */}
         <div className="p-3" style={{ borderTop: '1px solid #1e293b' }}>
-          <div className={`flex items-center ${isSidebarExpanded ? 'gap-2.5' : 'justify-center'} px-3 py-2.5 rounded-lg`} style={{ backgroundColor: '#1e293b' }}>
+          <div className={`flex items-center ${isSidebarOpen ? 'gap-2.5' : 'justify-center'} px-3 py-2.5 rounded-lg`} style={{ backgroundColor: '#1e293b' }}>
             <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${roleStyles[role.color]?.avatarGradient || 'from-slate-500 to-slate-700'} flex items-center justify-center text-white font-bold text-xs shadow-sm`}>
               {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </div>
-            {isSidebarExpanded && (
+            {isSidebarOpen && (
               <div className="flex-1 min-w-0">
                 <div className="text-[12px] font-semibold truncate" style={{ color: '#f1f5f9' }}>{user.name}</div>
                 <div className="text-[10px] truncate" style={{ color: '#64748b' }}>{user.designation}</div>
