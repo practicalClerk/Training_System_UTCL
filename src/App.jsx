@@ -115,11 +115,10 @@ const roleStyles = {
 };
 
 const StatCard = ({ label, value, sub, accent = false }) => (
-  <div className={`p-5 rounded-xl border relative overflow-hidden group transition-all hover:-translate-y-0.5 hover:shadow-lg ${
-    accent
-      ? 'bg-gradient-to-br from-teal-600 to-teal-700 border-teal-600 shadow-md shadow-teal-500/20'
-      : 'bg-white border-slate-200 shadow-sm'
-  }`}>
+  <div className={`p-5 rounded-xl border relative overflow-hidden group transition-all hover:-translate-y-0.5 hover:shadow-lg ${accent
+    ? 'bg-gradient-to-br from-teal-600 to-teal-700 border-teal-600 shadow-md shadow-teal-500/20'
+    : 'bg-white border-slate-200 shadow-sm'
+    }`}>
     <div className={`text-[10px] uppercase tracking-widest font-semibold mb-3 ${accent ? 'text-teal-100' : 'text-slate-400'}`}>{label}</div>
     <div className={`text-4xl font-extrabold tracking-tight leading-none ${accent ? 'text-white' : 'text-slate-900'}`}>{value}</div>
     {sub && <div className={`text-xs mt-2.5 font-medium ${accent ? 'text-teal-100/80' : 'text-slate-400'}`}>{sub}</div>}
@@ -602,10 +601,10 @@ const SessionDetailPanel = ({ session, onClose, role, onRequest }) => {
                         </button>
                         <div className="absolute right-0 mt-1 hidden group-hover:flex flex-col bg-white border border-slate-200 shadow-lg rounded py-1 z-10 w-24">
                           <button onClick={() => alert(`Email sent to ${p.name}`)} className="text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2 font-medium">
-                            <Mail className="w-3 h-3"/> Email
+                            <Mail className="w-3 h-3" /> Email
                           </button>
                           <button onClick={() => alert(`SMS sent to ${p.name}`)} className="text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2 font-medium">
-                            <Smartphone className="w-3 h-3"/> SMS
+                            <Smartphone className="w-3 h-3" /> SMS
                           </button>
                         </div>
                       </div>
@@ -749,6 +748,7 @@ export default function App() {
   const [notifLog, setNotifLog] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -951,17 +951,23 @@ export default function App() {
 
         {/* Bottom user card */}
         <div className="p-3" style={{ borderTop: '1px solid #1e293b' }}>
-          <div className={`flex items-center ${isSidebarOpen ? 'gap-2.5' : 'justify-center'} px-3 py-2.5 rounded-lg`} style={{ backgroundColor: '#1e293b' }}>
-            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${roleStyles[role.color]?.avatarGradient || 'from-slate-500 to-slate-700'} flex items-center justify-center text-white font-bold text-xs shadow-sm`}>
+          <button
+            onClick={() => setShowProfileModal(true)}
+            className={`w-full flex items-center ${isSidebarOpen ? 'gap-2.5' : 'justify-center'} px-3 py-2.5 rounded-lg transition-all group`}
+            style={{ backgroundColor: '#1e293b' }}
+            onMouseEnter={e => e.currentTarget.style.backgroundColor = '#334155'}
+            onMouseLeave={e => e.currentTarget.style.backgroundColor = '#1e293b'}
+          >
+            <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${roleStyles[role.color]?.avatarGradient || 'from-slate-500 to-slate-700'} flex items-center justify-center text-white font-bold text-xs shadow-sm group-hover:scale-105 transition-transform`}>
               {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </div>
             {isSidebarOpen && (
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 text-left">
                 <div className="text-[12px] font-semibold truncate" style={{ color: '#f1f5f9' }}>{user.name}</div>
                 <div className="text-[10px] truncate" style={{ color: '#64748b' }}>{user.designation}</div>
               </div>
             )}
-          </div>
+          </button>
         </div>
       </aside>
 
@@ -998,7 +1004,10 @@ export default function App() {
                 <span className="sm:hidden">Schedule</span>
               </button>
             )}
-            <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200 ml-1">
+            <div
+              onClick={() => setShowProfileModal(true)}
+              className="flex items-center gap-2.5 pl-3 border-l border-slate-200 ml-1 cursor-pointer hover:opacity-80 transition-opacity"
+            >
               <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${roleStyles[role.color]?.avatarGradient2 || 'from-slate-400 to-slate-600'} flex items-center justify-center text-white font-bold text-sm shadow-sm ring-2 ${roleStyles[role.color]?.ring || 'ring-slate-100'}`}>
                 {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
               </div>
@@ -1254,6 +1263,12 @@ export default function App() {
             <ReportModal
               session={selectedReport}
               onClose={() => setSelectedReport(null)}
+            />
+          )}
+          {showProfileModal && (
+            <ProfileModal
+              user={user}
+              onClose={() => setShowProfileModal(false)}
             />
           )}
         </main>
