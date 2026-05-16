@@ -229,14 +229,25 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                     { id: 'third_party', label: 'Third-Party', icon: ExternalLink, desc: 'External course' },
                   ].map(m => {
                     const Icon = m.icon;
+                    const selected = form.mode === m.id;
                     return (
                       <button
                         key={m.id} onClick={() => setForm({ ...form, mode: m.id })}
                         className={`p-3 rounded-lg border-2 text-left transition ${form.mode === m.id ? 'border-teal-600 bg-teal-50 dark:bg-slate-800/60' : 'border-slate-200 hover:border-slate-300 bg-white dark:bg-slate-800'}`}
                       >
-                        <Icon className={`w-4 h-4 mb-1.5 ${form.mode === m.id ? 'text-teal-700' : 'text-slate-600 dark:text-slate-300'}`} />
-                        <div className={`text-sm font-semibold ${form.mode === m.id ? 'text-teal-900 dark:text-teal-100' : 'text-slate-900 dark:text-slate-100'}`}>{m.label}</div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{m.desc}</div>
+                        <Icon
+                          className="w-4 h-4 mb-1.5"
+                          style={{ color: selected ? '#c2410c' : '#374151' }}
+                        />
+                        <div
+                          className="text-sm font-semibold"
+                          style={{ color: selected ? '#111827' : '#111827' }}
+                        >
+                          {m.label}
+                        </div>
+                        <div className="text-[11px] mt-0.5" style={{ color: '#4b5563' }}>
+                          {m.desc}
+                        </div>
                       </button>
                     );
                   })}
