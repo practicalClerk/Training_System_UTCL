@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Calendar, Users, Bell, FileText, Settings, LogOut, Plus, Search,
   Filter, Clock, MapPin, User, Mail, Phone, ChevronRight, X, Check, AlertCircle,
   Camera, Video, ExternalLink, MessageSquare, BarChart3, ChevronDown, Send, Menu,
-  Building2, GraduationCap, Hammer, Briefcase, ShieldCheck, UserCog
+  Building2, GraduationCap, Hammer, Briefcase, ShieldCheck, UserCog, ClipboardList
 } from 'lucide-react';
 
 // ============================================================================
@@ -269,6 +269,12 @@ const INITIAL_SESSIONS = [
     aim: 'Self-paced certification course covering PM fundamentals. Completion deadline: May 25, 2026.',
     department: 'Production', participants: [6, 7, 8], status: 'scheduled', attendance: null
   }
+];
+
+const INITIAL_REQUESTS = [
+  { id: 1, type: 'unavailability', userId: 1, sessionId: 1, reason: 'Sick leave', deptHeadApproval: 'pending', adminApproval: 'pending', status: 'pending', date: '2026-05-10T10:00:00Z' },
+  { id: 2, type: 'join_request', userId: 6, sessionId: 2, reason: 'Want to learn QMS', deptHeadApproval: 'approved', adminApproval: 'pending', status: 'pending', date: '2026-05-09T14:30:00Z' },
+  { id: 3, type: 'unavailability', userId: 11, sessionId: 3, reason: 'Family emergency', deptHeadApproval: 'approved', adminApproval: 'approved', status: 'approved', date: '2026-05-08T09:15:00Z' }
 ];
 
 // ============================================================================
@@ -545,38 +551,38 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
               <div className="border border-slate-200 rounded-lg overflow-x-auto">
                 <div className="min-w-[700px]">
                   <div className="bg-slate-50 px-4 py-2 border-b border-slate-200 grid grid-cols-12 gap-3 text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
-                  <div className="col-span-1"></div>
-                  <div className="col-span-3">Name</div>
-                  <div className="col-span-2">Emp ID</div>
-                  <div className="col-span-3">Department</div>
-                  <div className="col-span-2">Designation</div>
-                  <div className="col-span-1">Type</div>
-                </div>
-                <div className="max-h-[320px] overflow-y-auto">
-                  {filteredWorkforce.map(w => {
-                    const sel = selectedParticipants.includes(w.id);
-                    return (
-                      <div key={w.id} onClick={() => toggleParticipant(w.id)}
-                        className={`px-4 py-3 grid grid-cols-12 gap-3 items-center text-sm cursor-pointer border-b border-slate-100 last:border-b-0 transition ${sel ? 'bg-teal-50' : 'hover:bg-slate-50'}`}>
-                        <div className="col-span-1">
-                          <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${sel ? 'bg-teal-600 border-teal-600' : 'border-slate-300'}`}>
-                            {sel && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
+                    <div className="col-span-1"></div>
+                    <div className="col-span-3">Name</div>
+                    <div className="col-span-2">Emp ID</div>
+                    <div className="col-span-3">Department</div>
+                    <div className="col-span-2">Designation</div>
+                    <div className="col-span-1">Type</div>
+                  </div>
+                  <div className="max-h-[320px] overflow-y-auto">
+                    {filteredWorkforce.map(w => {
+                      const sel = selectedParticipants.includes(w.id);
+                      return (
+                        <div key={w.id} onClick={() => toggleParticipant(w.id)}
+                          className={`px-4 py-3 grid grid-cols-12 gap-3 items-center text-sm cursor-pointer border-b border-slate-100 last:border-b-0 transition ${sel ? 'bg-teal-50' : 'hover:bg-slate-50'}`}>
+                          <div className="col-span-1">
+                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${sel ? 'bg-teal-600 border-teal-600' : 'border-slate-300'}`}>
+                              {sel && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
+                            </div>
+                          </div>
+                          <div className="col-span-3 font-medium text-slate-900">{w.name}</div>
+                          <div className="col-span-2 text-slate-600 font-mono text-[12px]">{w.empId}</div>
+                          <div className="col-span-3 text-slate-600">{w.dept}</div>
+                          <div className="col-span-2 text-slate-600 text-[13px]">{w.designation}</div>
+                          <div className="col-span-1">
+                            <Badge color={w.type === 'labour' ? 'orange' : 'slate'}>{w.type === 'labour' ? 'Labour' : 'Emp'}</Badge>
                           </div>
                         </div>
-                        <div className="col-span-3 font-medium text-slate-900">{w.name}</div>
-                        <div className="col-span-2 text-slate-600 font-mono text-[12px]">{w.empId}</div>
-                        <div className="col-span-3 text-slate-600">{w.dept}</div>
-                        <div className="col-span-2 text-slate-600 text-[13px]">{w.designation}</div>
-                        <div className="col-span-1">
-                          <Badge color={w.type === 'labour' ? 'orange' : 'slate'}>{w.type === 'labour' ? 'Labour' : 'Emp'}</Badge>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {filteredWorkforce.length === 0 && (
-                    <div className="py-12 text-center text-sm text-slate-500">No matching workforce records</div>
-                  )}
-                </div>
+                      );
+                    })}
+                    {filteredWorkforce.length === 0 && (
+                      <div className="py-12 text-center text-sm text-slate-500">No matching workforce records</div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -725,7 +731,7 @@ const NotificationLog = ({ log, onClose }) => (
 // SESSION DETAIL PANEL
 // ============================================================================
 
-const SessionDetailPanel = ({ session, onClose, role }) => {
+const SessionDetailPanel = ({ session, onClose, role, onRequest }) => {
   if (!session) return null;
   const participants = session.participants.map(id => WORKFORCE.find(w => w.id === id)).filter(Boolean);
   const labourCount = participants.filter(p => p.type === 'labour').length;
@@ -804,6 +810,49 @@ const SessionDetailPanel = ({ session, onClose, role }) => {
               <p className="text-xs text-amber-800">On the day of the session, the instructor can upload group photos. Face recognition will auto-match participants against registered profiles.</p>
             </div>
           )}
+
+          {session.status === 'scheduled' && (role === 'employee' || role === 'labour') && (
+            <div className="pt-2 flex gap-3">
+              <button onClick={() => onRequest(session, 'unavailability')} className="flex-1 px-4 py-2 bg-red-50 text-red-700 hover:bg-red-100 font-semibold text-sm rounded-lg border border-red-200 transition">
+                Request Unavailability
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// REQUEST MODAL
+// ============================================================================
+
+const RequestModal = ({ session, type, onClose, onSubmit }) => {
+  const [reason, setReason] = useState('');
+
+  return (
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md flex flex-col overflow-hidden">
+        <div className="px-5 py-3.5 border-b border-slate-200 bg-gradient-to-r from-slate-900 to-slate-800 flex items-center justify-between">
+          <h2 className="text-base font-bold text-white">{type === 'unavailability' ? 'Request Unavailability' : 'Join Request'}</h2>
+          <button onClick={onClose} className="text-white/80 hover:text-white p-1 rounded transition">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        <div className="p-5 space-y-4">
+          <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-sm text-slate-700">
+            <strong>Session:</strong> {session.title}<br />
+            <strong>Date:</strong> {formatDate(session.date)}
+          </div>
+          <div>
+            <label className="block text-[12px] font-semibold text-slate-700 mb-1.5 uppercase tracking-wide">Reason</label>
+            <textarea value={reason} onChange={e => setReason(e.target.value)} rows={3} placeholder="Provide a reason for this request..." className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none resize-none" />
+          </div>
+        </div>
+        <div className="px-5 py-3 border-t border-slate-200 bg-slate-50 flex justify-end gap-2">
+          <button onClick={onClose} className="px-4 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-lg transition">Cancel</button>
+          <button onClick={() => onSubmit(reason)} disabled={!reason.trim()} className="px-4 py-1.5 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-lg transition disabled:opacity-50">Submit Request</button>
         </div>
       </div>
     </div>
@@ -819,6 +868,10 @@ export default function App() {
   const [activeView, setActiveView] = useState('dashboard');
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [sessions, setSessions] = useState(INITIAL_SESSIONS);
+  const [requests, setRequests] = useState(INITIAL_REQUESTS);
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [requestSession, setRequestSession] = useState(null);
+  const [requestType, setRequestType] = useState('unavailability');
   const [notifLog, setNotifLog] = useState(null);
   const [selectedSession, setSelectedSession] = useState(null);
   const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
@@ -874,12 +927,14 @@ export default function App() {
       base.push(
         { id: 'sessions', label: 'All Sessions', icon: Calendar },
         { id: 'workforce', label: 'Workforce', icon: Users },
+        { id: 'requests', label: 'Requests', icon: ClipboardList },
         { id: 'notifications', label: 'Notifications', icon: Bell },
         { id: 'reports', label: 'Reports', icon: FileText }
       );
     } else if (currentRole === 'hod') {
       base.push(
         { id: 'sessions', label: 'Department Sessions', icon: Calendar },
+        { id: 'requests', label: 'Approvals', icon: ClipboardList },
         { id: 'reports', label: 'Reports', icon: FileText }
       );
     } else if (currentRole === 'instructor') {
@@ -888,7 +943,10 @@ export default function App() {
         { id: 'attendance', label: 'Attendance', icon: Camera }
       );
     } else {
-      base.push({ id: 'sessions', label: 'My Trainings', icon: Calendar });
+      base.push(
+        { id: 'sessions', label: 'My Trainings', icon: Calendar },
+        { id: 'requests', label: 'My Requests', icon: ClipboardList }
+      );
     }
     return base;
   }, [currentRole]);
@@ -979,6 +1037,7 @@ export default function App() {
                 {activeView === 'notifications' && 'Notifications'}
                 {activeView === 'reports' && 'Reports'}
                 {activeView === 'attendance' && 'Attendance Capture'}
+                {activeView === 'requests' && (['employee', 'labour'].includes(currentRole) ? 'My Requests' : 'Pending Approvals')}
               </h1>
               <p className="text-[12px] text-slate-500 hidden sm:block">UltraTech Cement — Rawan Cement Works</p>
             </div>
@@ -987,7 +1046,7 @@ export default function App() {
             {canSchedule && (
               <button onClick={() => setShowScheduleModal(true)}
                 className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition flex items-center gap-1 sm:gap-1.5 shadow-sm whitespace-nowrap">
-                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> 
+                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Schedule Session</span>
                 <span className="sm:hidden">Schedule</span>
               </button>
@@ -1085,9 +1144,108 @@ export default function App() {
             </div>
           )}
 
+          {activeView === 'requests' && (
+            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-slate-900">Request Tracker</h2>
+                <Badge color="blue">{requests.length} total</Badge>
+              </div>
+              <div className="divide-y divide-slate-100">
+                {requests.map(req => {
+                  const reqSession = sessions.find(s => s.id === req.sessionId);
+                  const reqUser = WORKFORCE.find(w => w.id === req.userId);
+                  if (!reqSession || !reqUser) return null;
+
+                  // Filter for user role
+                  if (['employee', 'labour'].includes(currentRole) && reqUser.empId !== user.empId) return null;
+                  if (currentRole === 'hod' && reqUser.dept !== user.dept) return null;
+
+                  return (
+                    <div key={req.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50 transition">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge color={req.type === 'unavailability' ? 'red' : 'green'}>
+                            {req.type === 'unavailability' ? 'Unavailability' : 'Join Request'}
+                          </Badge>
+                          <span className="text-xs text-slate-500 font-medium">{formatDate(req.date)}</span>
+                        </div>
+                        <div className="text-sm font-semibold text-slate-900">{reqSession.title}</div>
+                        <div className="text-xs text-slate-600 mt-0.5">
+                          Requested by <strong>{reqUser.name}</strong> ({reqUser.designation})
+                        </div>
+                        <div className="text-sm text-slate-700 mt-2 bg-slate-50 p-2 rounded border border-slate-100">
+                          "{req.reason}"
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 min-w-[200px]">
+                        <div className="text-xs text-slate-600 flex justify-between">
+                          <span>HoD Approval:</span>
+                          <span className={`font-semibold ${req.deptHeadApproval === 'approved' ? 'text-green-600' : req.deptHeadApproval === 'rejected' ? 'text-red-600' : 'text-amber-600'}`}>{req.deptHeadApproval.toUpperCase()}</span>
+                        </div>
+                        <div className="text-xs text-slate-600 flex justify-between">
+                          <span>Admin Approval:</span>
+                          <span className={`font-semibold ${req.adminApproval === 'approved' ? 'text-green-600' : req.adminApproval === 'rejected' ? 'text-red-600' : 'text-amber-600'}`}>{req.adminApproval.toUpperCase()}</span>
+                        </div>
+
+                        {currentRole === 'hod' && req.deptHeadApproval === 'pending' && (
+                          <div className="flex gap-2 mt-2">
+                            <button onClick={() => setRequests(prev => prev.map(r => r.id === req.id ? { ...r, deptHeadApproval: 'approved' } : r))} className="flex-1 py-1.5 bg-teal-50 text-teal-700 text-xs font-semibold rounded hover:bg-teal-100">Approve</button>
+                            <button onClick={() => setRequests(prev => prev.map(r => r.id === req.id ? { ...r, deptHeadApproval: 'rejected', status: 'rejected' } : r))} className="flex-1 py-1.5 bg-red-50 text-red-700 text-xs font-semibold rounded hover:bg-red-100">Reject</button>
+                          </div>
+                        )}
+                        {['super_admin', 'hr'].includes(currentRole) && req.deptHeadApproval === 'approved' && req.adminApproval === 'pending' && (
+                          <div className="flex gap-2 mt-2">
+                            <button onClick={() => setRequests(prev => prev.map(r => r.id === req.id ? { ...r, adminApproval: 'approved', status: 'approved' } : r))} className="flex-1 py-1.5 bg-teal-50 text-teal-700 text-xs font-semibold rounded hover:bg-teal-100">Finalize</button>
+                            <button onClick={() => setRequests(prev => prev.map(r => r.id === req.id ? { ...r, adminApproval: 'rejected', status: 'rejected' } : r))} className="flex-1 py-1.5 bg-red-50 text-red-700 text-xs font-semibold rounded hover:bg-red-100">Reject</button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                {requests.filter(req => {
+                  const reqUser = WORKFORCE.find(w => w.id === req.userId);
+                  if (!reqUser) return false;
+                  if (['employee', 'labour'].includes(currentRole)) return reqUser.empId === user.empId;
+                  if (currentRole === 'hod') return reqUser.dept === user.dept;
+                  return true;
+                }).length === 0 && (
+                    <div className="p-8 text-center text-sm text-slate-500">No requests found.</div>
+                  )}
+              </div>
+            </div>
+          )}
+
           {showScheduleModal && <ScheduleSessionModal onClose={() => setShowScheduleModal(false)} onSchedule={handleScheduleSession} />}
           {notifLog && <NotificationLog log={notifLog} onClose={() => setNotifLog(null)} />}
-          {selectedSession && <SessionDetailPanel session={selectedSession} onClose={() => setSelectedSession(null)} role={currentRole} />}
+          {selectedSession && (
+            <SessionDetailPanel
+              session={selectedSession}
+              onClose={() => setSelectedSession(null)}
+              role={currentRole}
+              onRequest={(s, type) => {
+                setRequestSession(s);
+                setRequestType(type);
+                setShowRequestModal(true);
+                setSelectedSession(null);
+              }}
+            />
+          )}
+          {showRequestModal && (
+            <RequestModal
+              session={requestSession}
+              type={requestType}
+              onClose={() => { setShowRequestModal(false); setRequestSession(null); }}
+              onSubmit={(reason) => {
+                const uId = WORKFORCE.find(w => w.empId === user.empId)?.id || 1;
+                const newReq = { id: Date.now(), type: requestType, userId: uId, sessionId: requestSession.id, reason, deptHeadApproval: 'pending', adminApproval: 'pending', status: 'pending', date: new Date().toISOString() };
+                setRequests([newReq, ...requests]);
+                setShowRequestModal(false);
+                setRequestSession(null);
+              }}
+            />
+          )}
         </main>
       </div>
     </div>
