@@ -764,8 +764,8 @@ export default function App() {
                       <RIcon className={`w-3 h-3 text-${r.color}-700`} />
                     </div>
                     <div className="flex-1">
-                      <div className="text-[12px] font-medium text-slate-900">{r.name}</div>
-                      <div className="text-[10px] text-slate-500">{r.label}</div>
+                      <div className={`text-[12px] font-medium ${active ? 'text-teal-900' : 'text-slate-900'}`}>{r.name}</div>
+                      <div className={`text-[10px] ${active ? 'text-teal-700' : 'text-slate-500'}`}>{r.label}</div>
                     </div>
                     {active && <Check className="w-3.5 h-3.5 text-teal-600" />}
                   </button>
