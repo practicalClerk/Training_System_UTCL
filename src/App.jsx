@@ -190,7 +190,12 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
         <div className="px-6 py-4 border-b border-teal-700/30 flex items-center justify-between bg-gradient-to-r from-slate-900 via-teal-900 to-teal-800">
           <div>
             <h2 className="text-lg font-bold text-white tracking-tight">Schedule New Training Session</h2>
-            <p className="text-[12px] text-teal-300/80 mt-0.5 font-medium">Step {step} of 3 — {step === 1 ? 'Session Details' : step === 2 ? 'Select Participants' : 'Review & Confirm'}</p>
+            <p
+              className="text-[12px] text-slate-900 dark:text-white mt-0.5 font-medium"
+              style={{ textShadow: '0 0 1px #000' }}
+            >
+              Step {step} of 3 — {step === 1 ? 'Session Details' : step === 2 ? 'Select Participants' : 'Review & Confirm'}
+            </p>
           </div>
           <button onClick={onClose} className="text-white/60 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition">
             <X className="w-5 h-5" />
@@ -229,25 +234,14 @@ const ScheduleSessionModal = ({ onClose, onSchedule }) => {
                     { id: 'third_party', label: 'Third-Party', icon: ExternalLink, desc: 'External course' },
                   ].map(m => {
                     const Icon = m.icon;
-                    const selected = form.mode === m.id;
                     return (
                       <button
                         key={m.id} onClick={() => setForm({ ...form, mode: m.id })}
                         className={`p-3 rounded-lg border-2 text-left transition ${form.mode === m.id ? 'border-teal-600 bg-teal-50 dark:bg-slate-800/60' : 'border-slate-200 hover:border-slate-300 bg-white dark:bg-slate-800'}`}
                       >
-                        <Icon
-                          className="w-4 h-4 mb-1.5"
-                          style={{ color: selected ? '#c2410c' : '#374151' }}
-                        />
-                        <div
-                          className="text-sm font-semibold"
-                          style={{ color: selected ? '#111827' : '#111827' }}
-                        >
-                          {m.label}
-                        </div>
-                        <div className="text-[11px] mt-0.5" style={{ color: '#4b5563' }}>
-                          {m.desc}
-                        </div>
+                        <Icon className={`w-4 h-4 mb-1.5 ${form.mode === m.id ? 'text-teal-700' : 'text-slate-600 dark:text-slate-300'}`} />
+                        <div className={`text-sm font-semibold ${form.mode === m.id ? 'text-teal-900 dark:text-teal-100' : 'text-slate-900 dark:text-slate-100'}`}>{m.label}</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{m.desc}</div>
                       </button>
                     );
                   })}
@@ -761,6 +755,7 @@ export default function App() {
   const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
     return saved !== null ? saved === 'dark' : false;
@@ -859,20 +854,22 @@ export default function App() {
 
       {/* Sidebar — hardcoded dark colors so they stay dark in both light & dark theme */}
       <aside
-        className={`w-64 flex flex-col fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`w-64 flex flex-col fixed inset-y-0 left-0 z-40 transform transition-all duration-300 md:relative md:translate-x-0 ${isSidebarExpanded ? 'md:w-64' : 'md:w-20'} ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ backgroundColor: '#0f172a', borderRight: '1px solid #1e293b' }}
+        onMouseEnter={() => setIsSidebarExpanded(true)}
+        onMouseLeave={() => setIsSidebarExpanded(false)}
       >
         {/* Logo area with orange→teal accent strip */}
         <div className="px-5 py-5 relative" style={{ borderBottom: '1px solid #1e293b' }}>
           <div className="absolute top-0 left-0 w-1 h-full" style={{ background: 'linear-gradient(to bottom, #f97316, #0d9488)' }} />
-          <Logo dark />
+          <Logo dark small={!isSidebarExpanded} />
         </div>
 
         {/* Role switcher */}
         <div className="p-3" style={{ borderBottom: '1px solid #1e293b' }}>
-          <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2" style={{ color: '#475569' }}>Demo Mode</div>
+          {isSidebarExpanded && <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2" style={{ color: '#475569' }}>Demo Mode</div>}
           <button onClick={() => setRoleSwitcherOpen(!roleSwitcherOpen)}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg transition-all"
+            className={`w-full flex items-center ${isSidebarExpanded ? 'justify-between' : 'justify-center'} gap-2 px-3 py-2.5 rounded-lg transition-all`}
             style={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
             onMouseEnter={e => e.currentTarget.style.backgroundColor = '#334155'}
             onMouseLeave={e => e.currentTarget.style.backgroundColor = '#1e293b'}
@@ -881,12 +878,14 @@ export default function App() {
               <div className={`w-7 h-7 rounded-lg ${roleStyles[role.color]?.softBg || 'bg-slate-500/20'} flex items-center justify-center`}>
                 <role.icon className={`w-3.5 h-3.5 ${roleStyles[role.color]?.text || 'text-slate-400'}`} />
               </div>
-              <div className="text-left">
-                <div className="text-[12px] font-semibold leading-tight" style={{ color: '#f1f5f9' }}>{role.name}</div>
-                <div className="text-[10px]" style={{ color: '#64748b' }}>Switch role</div>
-              </div>
+              {isSidebarExpanded && (
+                <div className="text-left">
+                  <div className="text-[12px] font-semibold leading-tight" style={{ color: '#f1f5f9' }}>{role.name}</div>
+                  <div className="text-[10px]" style={{ color: '#64748b' }}>Switch role</div>
+                </div>
+              )}
             </div>
-            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${roleSwitcherOpen ? 'rotate-180' : ''}`} style={{ color: '#64748b' }} />
+            {isSidebarExpanded && <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${roleSwitcherOpen ? 'rotate-180' : ''}`} style={{ color: '#64748b' }} />}
           </button>
 
           {roleSwitcherOpen && (
@@ -918,13 +917,13 @@ export default function App() {
 
         {/* Navigation */}
         <nav className="flex-1 p-3 overflow-y-auto">
-          <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2 mt-1" style={{ color: '#475569' }}>Menu</div>
+          {isSidebarExpanded && <div className="text-[10px] uppercase tracking-widest font-semibold px-3 mb-2 mt-1" style={{ color: '#475569' }}>Menu</div>}
           {menuItems.map(item => {
             const Icon = item.icon;
             const active = activeView === item.id;
             return (
               <button key={item.id} onClick={() => { setActiveView(item.id); setIsMobileMenuOpen(false); }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium mb-0.5 transition-all"
+                className={`w-full flex items-center ${isSidebarExpanded ? 'justify-start gap-3' : 'justify-center'} px-3 py-2.5 rounded-lg text-sm font-medium mb-0.5 transition-all`}
                 style={{
                   backgroundColor: active ? '#0d9488' : 'transparent',
                   color: active ? '#ffffff' : '#94a3b8',
@@ -934,7 +933,7 @@ export default function App() {
                 onMouseLeave={e => { if (!active) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#94a3b8'; } }}
               >
                 <Icon className="w-4 h-4 flex-shrink-0" style={{ color: active ? '#ffffff' : '#64748b' }} />
-                {item.label}
+                {isSidebarExpanded && item.label}
               </button>
             );
           })}
@@ -942,14 +941,16 @@ export default function App() {
 
         {/* Bottom user card */}
         <div className="p-3" style={{ borderTop: '1px solid #1e293b' }}>
-          <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg" style={{ backgroundColor: '#1e293b' }}>
+          <div className={`flex items-center ${isSidebarExpanded ? 'gap-2.5' : 'justify-center'} px-3 py-2.5 rounded-lg`} style={{ backgroundColor: '#1e293b' }}>
             <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${roleStyles[role.color]?.avatarGradient || 'from-slate-500 to-slate-700'} flex items-center justify-center text-white font-bold text-xs shadow-sm`}>
               {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[12px] font-semibold truncate" style={{ color: '#f1f5f9' }}>{user.name}</div>
-              <div className="text-[10px] truncate" style={{ color: '#64748b' }}>{user.designation}</div>
-            </div>
+            {isSidebarExpanded && (
+              <div className="flex-1 min-w-0">
+                <div className="text-[12px] font-semibold truncate" style={{ color: '#f1f5f9' }}>{user.name}</div>
+                <div className="text-[10px] truncate" style={{ color: '#64748b' }}>{user.designation}</div>
+              </div>
+            )}
           </div>
         </div>
       </aside>
